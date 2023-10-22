@@ -16,30 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `bookings`
---
-
-DROP TABLE IF EXISTS `bookings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `bookings` (
-  `BookingID` int NOT NULL AUTO_INCREMENT,
-  `Date` datetime DEFAULT NULL,
-  `TableNumber` int DEFAULT NULL,
-  PRIMARY KEY (`BookingID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `bookings`
---
-
-LOCK TABLES `bookings` WRITE;
-/*!40000 ALTER TABLE `bookings` DISABLE KEYS */;
-/*!40000 ALTER TABLE `bookings` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `customerdetails`
 --
 
@@ -49,12 +25,10 @@ DROP TABLE IF EXISTS `customerdetails`;
 CREATE TABLE `customerdetails` (
   `CustomerID` int NOT NULL AUTO_INCREMENT,
   `Name` varchar(45) DEFAULT NULL,
-  `PhoneNumber` varchar(45) DEFAULT NULL,
+  `ContactNumber` varchar(45) DEFAULT NULL,
   `Email` varchar(45) DEFAULT NULL,
   `BookingID` int DEFAULT NULL,
-  PRIMARY KEY (`CustomerID`),
-  KEY `BookingID_idx` (`BookingID`),
-  CONSTRAINT `BookingID_idx1` FOREIGN KEY (`BookingID`) REFERENCES `bookings` (`BookingID`)
+  PRIMARY KEY (`CustomerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -100,12 +74,11 @@ DROP TABLE IF EXISTS `menu`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `menu` (
   `MenuID` int NOT NULL AUTO_INCREMENT,
-  `Cuisine` varchar(45) DEFAULT NULL,
-  `Starter` varchar(45) DEFAULT NULL,
-  `Course` varchar(45) DEFAULT NULL,
-  `Drink` varchar(45) DEFAULT NULL,
-  `Dessert` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`MenuID`)
+  `MenuName` varchar(45) DEFAULT NULL,
+  `MenuItemsID` int DEFAULT NULL,
+  PRIMARY KEY (`MenuID`),
+  KEY `MenuItemsID_idx` (`MenuItemsID`),
+  CONSTRAINT `MenuItemsID` FOREIGN KEY (`MenuItemsID`) REFERENCES `menuitems` (`MenuItemID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -119,6 +92,31 @@ LOCK TABLES `menu` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `menuitems`
+--
+
+DROP TABLE IF EXISTS `menuitems`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `menuitems` (
+  `MenuItemID` int NOT NULL AUTO_INCREMENT,
+  `CourseName` varchar(45) DEFAULT NULL,
+  `StarterName` varchar(45) DEFAULT NULL,
+  `DesertName` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`MenuItemID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `menuitems`
+--
+
+LOCK TABLES `menuitems` WRITE;
+/*!40000 ALTER TABLE `menuitems` DISABLE KEYS */;
+/*!40000 ALTER TABLE `menuitems` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `orders`
 --
 
@@ -127,13 +125,14 @@ DROP TABLE IF EXISTS `orders`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `orders` (
   `OrdersID` int NOT NULL AUTO_INCREMENT,
-  `BookingID` int DEFAULT NULL,
-  `OrderDate` datetime DEFAULT NULL,
-  `Quantity` int DEFAULT NULL,
+  `CustomerID` int DEFAULT NULL,
+  `MenuID` int DEFAULT NULL,
   `TotalCost` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`OrdersID`),
-  KEY `BookingID_idx` (`BookingID`),
-  CONSTRAINT `BookingID_idx2` FOREIGN KEY (`BookingID`) REFERENCES `bookings` (`BookingID`)
+  KEY `CustomerID_idx` (`CustomerID`),
+  KEY `MenuID_idx` (`MenuID`),
+  CONSTRAINT `CustomerID` FOREIGN KEY (`CustomerID`) REFERENCES `customerdetails` (`CustomerID`),
+  CONSTRAINT `MenuID` FOREIGN KEY (`MenuID`) REFERENCES `menu` (`MenuID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -182,4 +181,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-22 12:19:08
+-- Dump completed on 2023-10-22 13:04:19
